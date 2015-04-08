@@ -23,7 +23,7 @@ describe Ailurus::Dataset do
       stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
       stub_request(
         :any, /panda\.example\.com\/api\/1\.0\/dataset\/example\/data\//
-      ).to_return(:body => '{"objects": []}')
+      ).to_return(:body => '{"objects": [], "meta": {"next": "yes please"}}')
 
       @client = Ailurus::Client.new(
         :api_key => "API_KEY_HERE",

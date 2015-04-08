@@ -44,6 +44,10 @@ module Ailurus
       }
 
       res = @client.make_request(endpoint, params)
+      if res.objects.empty? && res.meta.next.nil?
+        raise RangeError, "No data available for offset #{offset}"
+      end
+
       res.objects.map { |row| row.data }
     end
 
