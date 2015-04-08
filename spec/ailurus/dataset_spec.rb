@@ -61,4 +61,34 @@ describe Ailurus::Dataset do
         })
     end
   end
+
+  it "ends when no more rows exist" do
+    url = "http://panda.example.com/api/1.0/dataset/example/data/"
+    query_params = {
+      "format" => "json",
+      "email" => "user@example.com",
+      "api_key" => "API_KEY_HERE",
+      "offset" => "0",
+      "limit" => "100"
+    }
+    stub_request(:get, url)
+      .with(:query => query_params)
+      .to_return(:body => '{"meta": {"next": "yep"}, "objects": []}')
+    stub_request(:get, url)
+      .with(:query => query_params.merge({"offset" => "100"}))
+      .to_return(:body => '{"meta": {"next": null}, "objects": []}')
+
+    client = Ailurus::Client.new(
+      :api_key => "API_KEY_HERE",
+      :domain => "panda.example.com",
+      :email => "user@example.com"
+    )
+    dataset = client.dataset("example")
+    dataset.data
+
+    expect(WebMock).to have_requested(:get, url)
+      .with(:query => query_params)
+    expect(WebMock).to have_requested(:get, url)
+      .with(:query => query_params.merge({"offset" => "100"}))
+  end
 end

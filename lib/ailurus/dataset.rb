@@ -61,5 +61,20 @@ module Ailurus
     def data_page(page_num = 0, rows_per_page = 100)
       self.data_rows(offset = page_num * rows_per_page, limit = rows_per_page)
     end
+
+    def data(rows_per_page = 100)
+      rows = []
+      page_num = 0
+      while true
+        begin
+          rows.concat(self.data_page(
+            page_num = page_num, rows_per_page = rows_per_page))
+        rescue RangeError
+          break
+        end
+        page_num += 1
+      end
+      rows
+    end
   end
 end
