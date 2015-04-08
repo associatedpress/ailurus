@@ -10,6 +10,8 @@ module Ailurus
   # slug    - The slug to a PANDA Dataset, as described at
   #           http://panda.readthedocs.org/en/1.1.1/api.html#datasets
   class Dataset
+    attr_accessor :client, :slug
+
     def initialize(client, slug)
       @client = client
       @slug = slug
