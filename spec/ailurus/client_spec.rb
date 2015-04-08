@@ -24,6 +24,7 @@ describe Ailurus::Client do
       :email => "user@example.com"
     )
     example_dataset = client.dataset("example")
+    example_dataset.metadata
 
     expected_url = "http://panda.example.com/api/1.0/dataset/example/"
     expect(WebMock).to have_requested(:get, expected_url).with(:query => {
