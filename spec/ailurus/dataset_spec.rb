@@ -40,24 +40,26 @@ describe Ailurus::Dataset do
     end
 
     it "handles row offset/limit" do
-      @dataset.data_rows(offset = 20, limit=20)
+      @dataset.data_rows(query = "hello", offset = 20, limit=20)
       expect_url(
         "http://panda.example.com/api/1.0/dataset/example/data/",
         :get,
         {
           "offset" => "20",
-          "limit" => "20"
+          "limit" => "20",
+          "q" => "hello"
         })
     end
 
     it "handles page numbers" do
-      @dataset.data_page(page_num = 3, rows_per_page = 50)
+      @dataset.data_page(query = "hello", page_num = 3, rows_per_page = 50)
       expect_url(
         "http://panda.example.com/api/1.0/dataset/example/data/",
         :get,
         {
           "offset" => "150",
-          "limit" => "50"
+          "limit" => "50",
+          "q" => "hello"
         })
     end
   end
@@ -69,7 +71,8 @@ describe Ailurus::Dataset do
       "email" => "user@example.com",
       "api_key" => "API_KEY_HERE",
       "offset" => "0",
-      "limit" => "100"
+      "limit" => "100",
+      "q" => "hello"
     }
     stub_request(:get, url)
       .with(:query => query_params)
@@ -84,11 +87,21 @@ describe Ailurus::Dataset do
       :email => "user@example.com"
     )
     dataset = client.dataset("example")
-    dataset.data
+    dataset.search("hello")
 
     expect(WebMock).to have_requested(:get, url)
       .with(:query => query_params)
     expect(WebMock).to have_requested(:get, url)
       .with(:query => query_params.merge({"offset" => "100"}))
+  end
+
+  it "requires a search query" do
+    client = Ailurus::Client.new(
+      :api_key => "API_KEY_HERE",
+      :domain => "panda.example.com",
+      :email => "user@example.com"
+    )
+    dataset = client.dataset("example")
+    expect { dataset.search }.to raise_error(NotImplementedError)
   end
 end
