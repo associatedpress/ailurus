@@ -8,9 +8,12 @@ This is a client gem to help people work programmatically with
     >> require "ailurus"
     >> client = Ailurus::Client.new
     >> dataset = client.dataset("DATASET_SLUG")
+
     >> metadata = dataset.metadata
     >> metadata.slug
     => "DATASET_SLUG"
+
+    >> results = dataset.search("search query")
 
 More capabilities coming soon.
 
