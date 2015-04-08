@@ -57,7 +57,6 @@ module Ailurus
     #
     # Returns the parsed JSON response, regardless of type.
     def make_request(endpoint, params = {})
-      # FIXME: Prohibit `..` et al. in endpoints.
       req_url = URI.join(Ailurus::Utils::get_absolute_uri(@domain), endpoint)
       req_url.query = URI.encode_www_form({
         :format => "json",
