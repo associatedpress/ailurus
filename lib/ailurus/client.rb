@@ -1,3 +1,5 @@
+require "ostruct"
+
 require "ailurus/dataset"
 
 module Ailurus
@@ -37,7 +39,7 @@ module Ailurus
       }.merge(params))
 
       res = Net::HTTP.get_response(req_url)
-      return JSON.parse(res.body)
+      return JSON.parse(res.body, :object_class => OpenStruct)
     end
 
     # Public: Return a Dataset instance with the given slug.
