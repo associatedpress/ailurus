@@ -22,7 +22,7 @@ module Ailurus
     # Returns a Hash.
     def metadata
       endpoint = "/api/1.0/dataset/#{@slug}/"
-      @client.make_request(endpoint)  # TODO: Do more with this.
+      @client.make_request(endpoint)
     end
   end
 end
