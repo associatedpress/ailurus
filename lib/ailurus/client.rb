@@ -18,6 +18,33 @@ module Ailurus
       config.each do |key, value|
         instance_variable_set("@#{key}", value)
       end
+
+      [
+        {
+          :description => "API key",
+          :env_var => "PANDA_API_KEY",
+          :instance_var => :@api_key
+        },
+        {
+          :description => "email address",
+          :env_var => "PANDA_EMAIL",
+          :instance_var => :@email
+        },
+        {
+          :description => "PANDA server domain",
+          :env_var => "PANDA_DOMAIN",
+          :instance_var => :@domain
+        },
+      ].each do |item|
+        if not self.instance_variable_defined?(item[:instance_var])
+          if not ENV.has_key?(item[:env_var])
+            raise ArgumentError, (
+              "No #{item[:description]} specified in arguments or " +
+              "#{item[:env_var]} environment variable")
+          end
+          self.instance_variable_set(item[:instance_var], ENV[item[:env_var]])
+        end
+      end
     end
 
     # Internal: Return the parsed JSON from a given API endpoint after adding

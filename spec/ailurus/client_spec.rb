@@ -3,16 +3,28 @@ require "spec_helper"
 require "ailurus/client"
 
 describe Ailurus::Client do
-  it "initializes properly" do
-    client = Ailurus::Client.new(
-      :api_key => "api key",
-      :domain => "domain name",
-      :email => "email address"
-    )
+  context "initializes properly" do
+    it "accepts config arguments" do
+      client = Ailurus::Client.new(
+        :api_key => "api key",
+        :domain => "domain name",
+        :email => "email address"
+      )
 
-    expect(client.api_key).to eq("api key")
-    expect(client.domain).to eq("domain name")
-    expect(client.email).to eq("email address")
+      expect(client.api_key).to eq("api key")
+      expect(client.domain).to eq("domain name")
+      expect(client.email).to eq("email address")
+    end
+
+    it "accepts environment variables" do
+      ClimateControl.modify PANDA_API_KEY: "api key", PANDA_DOMAIN: "domain name", PANDA_EMAIL: "email address" do
+        client = Ailurus::Client.new
+
+        expect(client.api_key).to eq("api key")
+        expect(client.domain).to eq("domain name")
+        expect(client.email).to eq("email address")
+      end
+    end
   end
 
   it "adds authentication parameters to requests" do
