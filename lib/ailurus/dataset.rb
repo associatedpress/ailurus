@@ -37,7 +37,7 @@ module Ailurus
     #           would need a limit of 10.
     #
     # Returns an Array of Arrays.
-    def data_rows(query = nil, offset = 0, limit = 100)
+    def data_rows(query = nil, offset = 0, limit = 100, additional_params = {})
       endpoint = "/api/1.0/dataset/#{slug}/data/"
       params = {
         "offset" => offset,
@@ -50,6 +50,8 @@ module Ailurus
       else
         params["q"] = query
       end
+
+      params.merge!(additional_params)
 
       res = @client.make_request(endpoint, params)
       if res.objects.empty? && res.meta.next.nil?
@@ -67,11 +69,13 @@ module Ailurus
     # rows_per_page - The number of rows to include on each page.
     #
     # Returns an Array of Arrays.
-    def data_page(query = nil, page_num = 0, rows_per_page = 100)
+    def data_page(
+        query = nil, page_num = 0, rows_per_page = 100, additional_params = {})
       self.data_rows(
         query = query,
         offset = page_num * rows_per_page,
-        limit = rows_per_page)
+        limit = rows_per_page,
+        additional_params = additional_params)
     end
 
     # Public: Search the Dataset with a given query.
@@ -82,12 +86,16 @@ module Ailurus
     # query - A query string to use when searching the data.
     #
     # Returns an Array of Arrays.
-    def search(query = nil)
+    def search(query = nil, additional_params = {})
       rows = []
       page_num = 0
       while true
         begin
-          rows.concat(self.data_page(query = query, page_num = page_num))
+          rows.concat(self.data_page(
+            query = query,
+            page_num = page_num,
+            rows_per_page = 100,
+            additional_params = additional_params))
         rescue RangeError
           break
         end
