@@ -15,7 +15,11 @@ This is a client gem to help people work programmatically with
 
     >> results = dataset.search("search query")
 
-More capabilities coming soon.
+    >> dataset = client.dataset("NEW_DATASET_SLUG")
+    >> dataset.create([{:name => "letter", :type => "unicode"}, {:name => "number", :type => "int"}])
+    >> dataset.update([{"data" => ["A", "1"]}, {"data" => ["A", "2"]}])
+    >> dataset.search("A")
+    => [["A", "1"], ["A", "2"]]
 
 ## Configuration ##
 
