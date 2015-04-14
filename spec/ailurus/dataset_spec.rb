@@ -124,4 +124,28 @@ describe Ailurus::Dataset do
     expect(WebMock).to have_requested(:get, url)
       .with(:query => query_params)
   end
+
+  context "may be created" do
+    before(:each) do
+      stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
+    end
+
+    it "works with no other parameters" do
+      client = Ailurus::Client.new(
+        :api_key => "API_KEY_HERE",
+        :domain => "panda.example.com",
+        :email => "user@example.com"
+      )
+      dataset = client.dataset("example")
+      dataset.create
+
+      expect_url(
+        "http://panda.example.com/api/1.0/dataset/",
+        :post,
+        {
+          "name" => "example",
+          "slug" => "example"
+        })
+    end
+  end
 end
