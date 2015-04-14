@@ -11,14 +11,6 @@ describe Ailurus::Dataset do
   end
 
   context "hits the correct endpoints" do
-    def expect_url(url, method = :get, params = {})
-      expect(WebMock).to have_requested(method, url).with(:query => {
-        "format" => "json",
-        "email" => "user@example.com",
-        "api_key" => "API_KEY_HERE"
-      }.merge(params))
-    end
-
     before(:each) do
       stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
       stub_request(
