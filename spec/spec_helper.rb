@@ -6,7 +6,12 @@ require "webmock/rspec"
 require "ailurus"
 
 def expect_url(url, method = :get, params = {})
-  expect(WebMock).to have_requested(method, url).with(:query => {
+  content_key = case method
+                when :get then :query
+                else :body
+                end
+
+  expect(WebMock).to have_requested(method, url).with(content_key => {
     "format" => "json",
     "email" => "user@example.com",
     "api_key" => "API_KEY_HERE"

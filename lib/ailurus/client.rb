@@ -56,15 +56,24 @@ module Ailurus
     #             none).
     #
     # Returns the parsed JSON response, regardless of type.
-    def make_request(endpoint, params = {})
+    def make_request(endpoint, params = {}, method = :get)
       req_url = URI.join(Ailurus::Utils::get_absolute_uri(@domain), endpoint)
-      req_url.query = URI.encode_www_form({
+      all_params = {
         :format => "json",
         :email => @email,
         :api_key => @api_key
-      }.merge(params))
+      }.merge(params)
 
-      res = Net::HTTP.get_response(req_url)
+      res = case method
+            when :get
+              req_url.query = URI.encode_www_form(all_params)
+              Net::HTTP.get_response(req_url)
+            when :post
+              Net::HTTP.post_form(req_url, all_params)
+            else
+              raise NotImplementedError
+            end
+
       return JSON.parse(res.body, :object_class => OpenStruct)
     end
 
