@@ -38,7 +38,7 @@ describe Ailurus::Client do
     client.make_request("/")
 
     expected_url = "http://panda.example.com/"
-    expect(WebMock).to have_requested(:get, expected_url).with(:query => {
+    expect_url(expected_url, :get, {
       "format" => "json",
       "email" => "user@example.com",
       "api_key" => "API_KEY_HERE"
