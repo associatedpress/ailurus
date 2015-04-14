@@ -5,24 +5,26 @@ require "webmock/rspec"
 
 require "ailurus"
 
-def expect_url(url, method = :get, payload = {})
-  query = {
+def expect_url(url, options = {})
+  # Handle default option values.
+  query = options.fetch(:query, {})
+  method = options.fetch(:method, :get)
+  body = options.fetch(:body, nil)
+
+  auth_params = {
     "format" => "json",
     "email" => "user@example.com",
     "api_key" => "API_KEY_HERE"
   }
-  if method == :get
-    query.merge!(payload)
-    expectation = {
-      :query => query.merge(payload)
-    }
-  else
-    expectation = {
-      :query => query,
-      :body => JSON.generate(payload),
-      :headers => {
-        "Content-Type": "application/json"
-      }
+  query = auth_params.merge(query)
+
+  expectation = {
+    :query => query
+  }
+  if not body.nil?
+    expectation[:body] = JSON.generate(body)
+    expectation[:headers] = {
+      "Content-Type": "application/json"
     }
   end
 

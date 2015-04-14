@@ -41,7 +41,7 @@ describe Ailurus::Client do
 
     it "GET" do
       @client.make_request("/")
-      expect_url(@url, :get, {
+      expect_url(@url, :query => {
         "format" => "json",
         "email" => "user@example.com",
         "api_key" => "API_KEY_HERE"
@@ -49,8 +49,8 @@ describe Ailurus::Client do
     end
 
     it "POST" do
-      @client.make_request("/", {}, :post)
-      expect_url(@url, :post, {})
+      @client.make_request("/", :body => {}, :method => :post)
+      expect_url(@url, :body => {}, :method => :post)
     end
   end
 end

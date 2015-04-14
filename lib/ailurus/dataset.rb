@@ -53,7 +53,7 @@ module Ailurus
 
       params.merge!(additional_params)
 
-      res = @client.make_request(endpoint, params)
+      res = @client.make_request(endpoint, :query => params)
       if res.objects.empty? && res.meta.next.nil?
         raise RangeError, "No data available for offset #{offset}"
       end

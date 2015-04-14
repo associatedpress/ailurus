@@ -35,8 +35,7 @@ describe Ailurus::Dataset do
       @dataset.data_rows(query = "hello", offset = 20, limit=20)
       expect_url(
         "http://panda.example.com/api/1.0/dataset/example/data/",
-        :get,
-        {
+        :query => {
           "offset" => "20",
           "limit" => "20",
           "q" => "hello"
@@ -47,8 +46,7 @@ describe Ailurus::Dataset do
       @dataset.data_page(query = "hello", page_num = 3, rows_per_page = 50)
       expect_url(
         "http://panda.example.com/api/1.0/dataset/example/data/",
-        :get,
-        {
+        :query => {
           "offset" => "150",
           "limit" => "50",
           "q" => "hello"
@@ -141,8 +139,8 @@ describe Ailurus::Dataset do
 
       expect_url(
         "http://panda.example.com/api/1.0/dataset/",
-        :post,
-        {
+        :method => :post,
+        :body => {
           "name" => "example",
           "slug" => "example"
         })

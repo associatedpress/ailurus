@@ -53,32 +53,40 @@ module Ailurus
     #
     # endpoint  - The path component of the URL to the desired API endpoint
     #             (e.g., /api/1.0/dataset/).
-    # params    - A Hash of GET parameters to add to the request (default:
-    #             none).
+    # options   - A Hash of additional options for the request:
+    #             :query  - A Hash of query-string parameters to add to the
+    #                       request (default: none).
+    #             :method - A Symbol specifying the HTTP method for the request
+    #                       (default: :get).
+    #             :body   - An object to be converted to JSON and used as the
+    #                       request body (default: empty).
     #
     # Returns the parsed JSON response, regardless of type.
-    def make_request(endpoint, params = {}, method = :get)
+    def make_request(endpoint, options = {})
+      # Handle default option values.
+      query = options.fetch(:query, {})
+      method = options.fetch(:method, :get)
+      body = options.fetch(:body, nil)
+
       req_url = URI.join(Ailurus::Utils::get_absolute_uri(@domain), endpoint)
       auth_params = {
         :format => "json",
         :email => @email,
         :api_key => @api_key
       }
+      req_url.query = URI.encode_www_form(auth_params.merge(query))
 
-      res = case method
-            when :get
-              req_url.query = URI.encode_www_form(auth_params.merge(params))
-              Net::HTTP.get_response(req_url)
-            when :post
-              req_url.query = URI.encode_www_form(auth_params)
-              Net::HTTP.start(req_url.hostname, req_url.port) do |http|
-                http.post(req_url.request_uri, JSON.generate(params), {
-                  "Content-Type" => "application/json"
-                })
-              end
-            else
-              raise NotImplementedError
-            end
+      req_class = Net::HTTP.const_get(method.to_s.capitalize)
+      req = req_class.new(req_url)
+
+      if not body.nil?
+        req.body = JSON.generate(body)
+        req.content_type = "application/json"
+      end
+
+      res = Net::HTTP.start(req_url.hostname, req_url.port) do |http|
+        http.request(req)
+      end
 
       if res.body && res.body.length >= 2
         JSON.parse(res.body, :object_class => OpenStruct)
