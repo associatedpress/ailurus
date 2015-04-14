@@ -119,7 +119,7 @@ module Ailurus
     # additional_params - A Hash of other properties to set on the Dataset,
     #                     such as description and title (default: none).
     #
-    # Returns whatever comes back from the API.
+    # Returns a metadata object, such as the one returned by Dataset#metadata.
     def create(columns = [], additional_params = {})
       # Start with the bare minimum.
       payload = {
