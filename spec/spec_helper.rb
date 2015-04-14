@@ -19,7 +19,10 @@ def expect_url(url, method = :get, payload = {})
   else
     expectation = {
       :query => query,
-      :body => JSON.generate(payload)
+      :body => JSON.generate(payload),
+      :headers => {
+        "Content-Type": "application/json"
+      }
     }
   end
 

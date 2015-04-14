@@ -72,7 +72,9 @@ module Ailurus
             when :post
               req_url.query = URI.encode_www_form(auth_params)
               Net::HTTP.start(req_url.hostname, req_url.port) do |http|
-                http.post(req_url.request_uri, JSON.generate(params))
+                http.post(req_url.request_uri, JSON.generate(params), {
+                  "Content-Type" => "application/json"
+                })
               end
             else
               raise NotImplementedError
