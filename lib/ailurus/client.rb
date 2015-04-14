@@ -1,3 +1,4 @@
+require "json"
 require "ostruct"
 
 require "ailurus/dataset"
@@ -58,23 +59,30 @@ module Ailurus
     # Returns the parsed JSON response, regardless of type.
     def make_request(endpoint, params = {}, method = :get)
       req_url = URI.join(Ailurus::Utils::get_absolute_uri(@domain), endpoint)
-      all_params = {
+      auth_params = {
         :format => "json",
         :email => @email,
         :api_key => @api_key
-      }.merge(params)
+      }
 
       res = case method
             when :get
-              req_url.query = URI.encode_www_form(all_params)
+              req_url.query = URI.encode_www_form(auth_params.merge(params))
               Net::HTTP.get_response(req_url)
             when :post
-              Net::HTTP.post_form(req_url, all_params)
+              req_url.query = URI.encode_www_form(auth_params)
+              Net::HTTP.start(req_url.hostname, req_url.port) do |http|
+                http.post(req_url.request_uri, JSON.generate(params))
+              end
             else
               raise NotImplementedError
             end
 
-      return JSON.parse(res.body, :object_class => OpenStruct)
+      if res.body && res.body.length >= 2
+        JSON.parse(res.body, :object_class => OpenStruct)
+      else
+        nil
+      end
     end
 
     # Public: Return a Dataset instance with the given slug.
