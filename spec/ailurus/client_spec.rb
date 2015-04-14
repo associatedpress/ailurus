@@ -27,21 +27,34 @@ describe Ailurus::Client do
     end
   end
 
-  it "adds authentication parameters to requests" do
-    stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
+  context "adds authentication parameters to requests" do
+    before(:each) do
+      stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
 
-    client = Ailurus::Client.new(
-      :api_key => "API_KEY_HERE",
-      :domain => "panda.example.com",
-      :email => "user@example.com"
-    )
-    client.make_request("/")
+      @client = Ailurus::Client.new(
+        :api_key => "API_KEY_HERE",
+        :domain => "panda.example.com",
+        :email => "user@example.com"
+      )
+      @url = "http://panda.example.com/"
+    end
 
-    expected_url = "http://panda.example.com/"
-    expect_url(expected_url, :get, {
-      "format" => "json",
-      "email" => "user@example.com",
-      "api_key" => "API_KEY_HERE"
-    })
+    it "GET" do
+      @client.make_request("/")
+      expect_url(@url, :get, {
+        "format" => "json",
+        "email" => "user@example.com",
+        "api_key" => "API_KEY_HERE"
+      })
+    end
+
+    it "POST" do
+      @client.make_request("/", {}, :post)
+      expect_url(@url, :post, {
+        "format" => "json",
+        "email" => "user@example.com",
+        "api_key" => "API_KEY_HERE"
+      })
+    end
   end
 end
