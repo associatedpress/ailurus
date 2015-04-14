@@ -145,5 +145,30 @@ describe Ailurus::Dataset do
           "slug" => "example"
         })
     end
+
+    it "includes column info in the query" do
+      client = Ailurus::Client.new(
+        :api_key => "API_KEY_HERE",
+        :domain => "panda.example.com",
+        :email => "user@example.com"
+      )
+      dataset = client.dataset("example")
+      dataset.create([
+        {:name => "test"}
+      ])
+
+      expect_url(
+        "http://panda.example.com/api/1.0/dataset/",
+        :method => :post,
+        :body => {
+          "name" => "example",
+          "slug" => "example"
+        },
+        :query => {
+          "columns" => "test",
+          "column_types" => "unicode",
+          "typed_columns" => "false"
+        })
+    end
   end
 end

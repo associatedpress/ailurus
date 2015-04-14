@@ -129,14 +129,15 @@ module Ailurus
 
       # Add the columns. This requires the addition of up to three separate
       # parameters, each comma-delimited and in a consistent order.
+      column_info = {}
       if not columns.empty?
-        payload["columns"] = columns.each_with_index.map do |column, col_num|
-          column.fetch(:name, "column_#{col_num}")
+        column_info["columns"] = columns.each_with_index.map do |column, index|
+          column.fetch(:name, "column_#{index}")
         end.join(",")
-        payload["column_types"] = columns.map do |column|
+        column_info["column_types"] = columns.map do |column|
           column.fetch(:type, "unicode")
         end.join(",")
-        payload["typed_columns"] = columns.map do |column|
+        column_info["typed_columns"] = columns.map do |column|
           # FIXME: Probably should check whether non-false values _actually_
           # are true.
           column.fetch(:index, false).to_s
@@ -147,7 +148,9 @@ module Ailurus
       payload.merge!(additional_params)
 
       # Let's do this thing!
-      @client.make_request("/api/1.0/dataset/", payload, :post)
+      @client.make_request(
+        "/api/1.0/dataset/", :method => :post,
+        :query => column_info, :body => payload)
     end
   end
 end
