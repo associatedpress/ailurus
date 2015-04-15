@@ -1,8 +1,3 @@
-require "json"
-require "net/http"
-
-require "ailurus/utils"
-
 module Ailurus
   # Public: A class corresponding to a PANDA Dataset.
   #

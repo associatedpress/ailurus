@@ -1,5 +1,7 @@
 require "spec_helper"
 
+require "ailurus/utils"
+
 describe Ailurus::Utils do
   context "get_absolute_uri works as expected" do
     it "handles bare domains" do
