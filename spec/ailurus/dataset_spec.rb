@@ -220,4 +220,21 @@ describe Ailurus::Dataset do
       )
     end
   end
+
+  it "looks up indexed field names" do
+    stub_request(:any, /panda\.example\.com/).to_return(
+      :body => JSON.generate({
+        "column_schema" => [{
+          "name" => "alfa", "indexed_name" => "column_unicode_alfa"}]}))
+
+    client = Ailurus::Client.new(
+      :api_key => "API_KEY_HERE",
+      :domain => "panda.example.com",
+      :email => "user@example.com"
+    )
+    dataset = client.dataset("example")
+
+    test_name = dataset.get_indexed_name("alfa")
+    expect(test_name).to eq("column_unicode_alfa")
+  end
 end
