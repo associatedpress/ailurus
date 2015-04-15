@@ -31,11 +31,7 @@ describe Ailurus::Client do
     before(:each) do
       stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
 
-      @client = Ailurus::Client.new(
-        :api_key => "API_KEY_HERE",
-        :domain => "panda.example.com",
-        :email => "user@example.com"
-      )
+      @client = make_test_client
       @url = "http://panda.example.com/"
     end
 

@@ -17,11 +17,7 @@ describe Ailurus::Dataset do
         :any, /panda\.example\.com\/api\/1\.0\/dataset\/example\/data\//
       ).to_return(:body => '{"objects": [], "meta": {"next": "yes please"}}')
 
-      @client = Ailurus::Client.new(
-        :api_key => "API_KEY_HERE",
-        :domain => "panda.example.com",
-        :email => "user@example.com"
-      )
+      @client = make_test_client
       @slug = "example"
       @dataset = Ailurus::Dataset.new(@client, @slug)
     end
@@ -71,11 +67,7 @@ describe Ailurus::Dataset do
       .with(:query => query_params.merge({"offset" => "100"}))
       .to_return(:body => '{"meta": {"next": null}, "objects": []}')
 
-    client = Ailurus::Client.new(
-      :api_key => "API_KEY_HERE",
-      :domain => "panda.example.com",
-      :email => "user@example.com"
-    )
+    client = make_test_client
     dataset = client.dataset("example")
     dataset.search("hello")
 
@@ -86,11 +78,7 @@ describe Ailurus::Dataset do
   end
 
   it "requires a search query" do
-    client = Ailurus::Client.new(
-      :api_key => "API_KEY_HERE",
-      :domain => "panda.example.com",
-      :email => "user@example.com"
-    )
+    client = make_test_client
     dataset = client.dataset("example")
     expect { dataset.search }.to raise_error(NotImplementedError)
   end
@@ -111,11 +99,7 @@ describe Ailurus::Dataset do
       .with(:query => query_params)
       .to_return(:body => '{"meta": {"next": null}, "objects": []}')
 
-    client = Ailurus::Client.new(
-      :api_key => "API_KEY_HERE",
-      :domain => "panda.example.com",
-      :email => "user@example.com"
-    )
+    client = make_test_client
     dataset = client.dataset("example")
     dataset.search("hello", {"foo" => "bar"})
 
@@ -129,11 +113,7 @@ describe Ailurus::Dataset do
     end
 
     it "works with no other parameters" do
-      client = Ailurus::Client.new(
-        :api_key => "API_KEY_HERE",
-        :domain => "panda.example.com",
-        :email => "user@example.com"
-      )
+      client = make_test_client
       dataset = client.dataset("example")
       dataset.create
 
@@ -147,11 +127,7 @@ describe Ailurus::Dataset do
     end
 
     it "includes column info in the query" do
-      client = Ailurus::Client.new(
-        :api_key => "API_KEY_HERE",
-        :domain => "panda.example.com",
-        :email => "user@example.com"
-      )
+      client = make_test_client
       dataset = client.dataset("example")
       dataset.create([
         {:name => "test"}
@@ -175,11 +151,7 @@ describe Ailurus::Dataset do
   context "may be updated" do
     before(:each) do
       stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
-      @client = Ailurus::Client.new(
-        :api_key => "API_KEY_HERE",
-        :domain => "panda.example.com",
-        :email => "user@example.com"
-      )
+      @client = make_test_client
       @dataset = @client.dataset("example")
     end
 
@@ -227,11 +199,7 @@ describe Ailurus::Dataset do
         "column_schema" => [{
           "name" => "alfa", "indexed_name" => "column_unicode_alfa"}]}))
 
-    client = Ailurus::Client.new(
-      :api_key => "API_KEY_HERE",
-      :domain => "panda.example.com",
-      :email => "user@example.com"
-    )
+    client = make_test_client
     dataset = client.dataset("example")
 
     test_name = dataset.get_indexed_name("alfa")
