@@ -2,6 +2,7 @@ require "json"
 require "ostruct"
 
 require "ailurus/dataset"
+require "ailurus/utils"
 
 module Ailurus
   # Public: Initialize a client object through which to interact with a PANDA
