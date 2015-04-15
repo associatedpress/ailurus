@@ -4,6 +4,26 @@ require "ostruct"
 require "ailurus/dataset"
 require "ailurus/utils"
 
+# We can't deserialize JSON properly into an OpenStruct under Ruby 1.9.3
+# because OpenStruct instances are missing a required method. Let's implement
+# that if it doesn't already exist.
+#
+# Method source copied from 2.2.2: http://bit.ly/1FTM95x
+if not OpenStruct.method_defined?("[]=".to_s)
+  class OpenStruct
+    #
+    # Sets the value of a member.
+    #
+    #   person = OpenStruct.new('name' => 'John Smith', 'age' => 70)
+    #   person[:age] = 42 # => equivalent to ostruct.age = 42
+    #   person.age # => 42
+    #
+    def []=(name, value)
+      modifiable[new_ostruct_member(name)] = value
+    end
+  end
+end
+
 module Ailurus
   # Public: Initialize a client object through which to interact with a PANDA
   # server.
@@ -78,7 +98,7 @@ module Ailurus
       req_url.query = URI.encode_www_form(auth_params.merge(query))
 
       req_class = Net::HTTP.const_get(method.to_s.capitalize)
-      req = req_class.new(req_url)
+      req = req_class.new(req_url.request_uri)
 
       if not body.nil?
         req.body = JSON.generate(body)

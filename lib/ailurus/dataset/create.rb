@@ -19,8 +19,8 @@ module Ailurus
     def create(columns = [], additional_params = {})
       # Start with the bare minimum.
       payload = {
-        "name": @slug,
-        "slug": @slug
+        "name" => @slug,
+        "slug" => @slug
       }
 
       # Add the columns. This requires the addition of up to three separate

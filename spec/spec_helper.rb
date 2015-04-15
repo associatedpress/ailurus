@@ -32,7 +32,7 @@ def expect_url(url, options = {})
   if not body.nil?
     expectation[:body] = JSON.generate(body)
     expectation[:headers] = {
-      "Content-Type": "application/json"
+      "Content-Type" => "application/json"
     }
   end
 
