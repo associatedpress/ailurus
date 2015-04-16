@@ -69,7 +69,7 @@ module Ailurus
       end
     end
 
-    # Internal: Return the parsed JSON from a given API endpoint after adding
+    # Public: Return the parsed JSON from a given API endpoint after adding
     # the appropriate domain and authentication parameters.
     #
     # endpoint  - The path component of the URL to the desired API endpoint
