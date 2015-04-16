@@ -58,5 +58,5 @@ variable `PANDA_API_KEY`, `PANDA_DOMAIN` or `PANDA_EMAIL`, as appropriate.
 ## Name ##
 
 Ruby client for PANDA => `ruby-panda` =>
-[red panda](http://en.wikipedia.org/wiki/Red_panda) => _Ailurus fulgens_ =>
-Ailurus
+[red panda](http://en.wikipedia.org/wiki/Red_panda) =>
+_Ailurus fulgens_ (scientific name) => Ailurus
