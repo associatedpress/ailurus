@@ -3,6 +3,10 @@
 This is a client gem to help people work programmatically with
 [PANDA](http://pandaproject.net/) instances.
 
+## Installation ##
+
+    $ gem install ailurus
+
 ## Usage ##
 
     >> require "ailurus"
