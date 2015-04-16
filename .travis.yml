@@ -1,6 +1,8 @@
 language: ruby
 rvm:
+  - 2.2.2
   - 2.2.1
+  - 1.9.3
 notifications:
   email: false
 before_install:
