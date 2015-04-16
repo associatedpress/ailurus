@@ -61,7 +61,7 @@ describe Ailurus::Dataset do
 
       client = make_test_client
       dataset = client.dataset("example")
-      dataset.search("hello", {"foo" => "bar"})
+      dataset.search("hello", :options => {"foo" => "bar"})
 
       expect(WebMock).to have_requested(:get, url)
         .with(:query => query_params)
@@ -91,6 +91,35 @@ describe Ailurus::Dataset do
       expect(WebMock).to have_requested(:get, url)
         .with(:query => query_params)
       expect(WebMock).to have_requested(:get, url)
+        .with(:query => query_params.merge({"offset" => "100"}))
+    end
+
+    it "doesn't make extra requests if enough results have arrived" do
+      url = "http://panda.example.com/api/1.0/dataset/example/data/"
+      query_params = {
+        "format" => "json",
+        "email" => "user@example.com",
+        "api_key" => "API_KEY_HERE",
+        "offset" => "0",
+        "limit" => "100",
+        "q" => "hello"
+      }
+      stub_request(:get, url)
+        .with(:query => query_params)
+        .to_return(:body => JSON.generate({
+          "meta" => {"next" => "yep"},
+          "objects" => (0..99).map { |num| {"data" => [num.to_s]} }}))
+      stub_request(:get, url)
+        .with(:query => query_params.merge({"offset" => "100"}))
+        .to_return(:body => '{"meta": {"next": null}, "objects": []}')
+
+      client = make_test_client
+      dataset = client.dataset("example")
+      dataset.search("hello", :max_results => 50)
+
+      expect(WebMock).to have_requested(:get, url)
+        .with(:query => query_params)
+      expect(WebMock).not_to have_requested(:get, url)
         .with(:query => query_params.merge({"offset" => "100"}))
     end
   end

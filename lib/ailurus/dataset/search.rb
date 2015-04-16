@@ -61,10 +61,17 @@ module Ailurus
     # query - A query string to use when searching the data.
     #
     # Returns an Array of Arrays.
-    def search(query = nil, additional_params = {})
+    def search(query = nil, options = {})
+      # Handle optional arguments.
+      max_results = options.fetch(:max_results, nil)
+      additional_params = options.fetch(:options, {})
+
       rows = []
       page_num = 0
-      while true
+
+      while true  # Warning: Infinite loop! Remember to break.
+        # Get the current page of results. If there aren't any results on that
+        # page, we're done.
         begin
           rows.concat(self.data_page(
             query = query,
@@ -72,10 +79,20 @@ module Ailurus
             rows_per_page = 100,
             additional_params = additional_params))
         rescue RangeError
-          break
+          break  # Escape the infinite loop!
         end
+
+        # If we have at least as many results as we're supposed to return,
+        # we're done! (Truncating as necessary, of course.)
+        if !max_results.nil? && rows.length >= max_results
+          rows.slice!(max_results, rows.length - max_results)
+          break  # Escape the infinite loop!
+        end
+
+        # Move on to the next page.
         page_num += 1
       end
+
       rows
     end
   end

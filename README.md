@@ -20,6 +20,8 @@ This is a client gem to help people work programmatically with
     >> dataset.update([{"data" => ["A", "1"]}, {"data" => ["A", "2"]}])
     >> dataset.search("A")
     => [["A", "1"], ["A", "2"]]
+    >> dataset.search("A", :max_results => 1)
+    => [["A", "1"]]
 
 For datasets with indexed fields, you can perform additional searches and sorts
 (better syntax TK):
@@ -31,7 +33,7 @@ For datasets with indexed fields, you can perform additional searches and sorts
     => "column_unicode_name"
     >> dataset.search("column_unicode_name:bravo")
     => [["bravo"]]
-    >> dataset.search("*", {"sort" => "column_unicode_name desc"})
+    >> dataset.search("*", :options => {"sort" => "column_unicode_name desc"})
     => [["charlie"], ["bravo"], ["alfa"]]
 
 ## Configuration ##
