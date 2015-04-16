@@ -1,5 +1,8 @@
 # Ailurus #
 
+[![Build Status](https://travis-ci.org/associatedpress/ailurus.svg?branch=master)](https://travis-ci.org/associatedpress/ailurus)
+[![Gem Version](https://badge.fury.io/rb/ailurus.svg)](http://badge.fury.io/rb/ailurus)
+
 This is a client gem to help people work programmatically with
 [PANDA](http://pandaproject.net/) instances.
 
