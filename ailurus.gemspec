@@ -11,16 +11,12 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Ruby client gem for PANDA servers}
   spec.description   = %q{Ruby client gem for newsroom data libraries running PANDA}
-  spec.homepage      = "http://ctcinteract-svn01.ap.org/redmine/projects/ailurus"
+  spec.homepage      = "https://github.com/associatedpress/ailurus"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "http://ctcinteract-svn01.ap.org/geminabox"
-  end
 
   spec.add_development_dependency "bundler", "~> 1.9"
   spec.add_development_dependency "rake", "~> 10.0"
