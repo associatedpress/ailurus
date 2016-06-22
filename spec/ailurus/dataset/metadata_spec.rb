@@ -10,6 +10,14 @@ describe Ailurus::Dataset do
       expect_url("http://panda.example.com/api/1.0/dataset/example/")
     end
 
+    it "responds appropriately to malformed input" do
+      stub_request(:any, /panda\.example\.com/).to_return(:body => "{}")
+      client = make_test_client
+      allow(client).to receive(:make_request).and_raise(JSON::ParserError)
+      test_metadata = client.dataset("example").metadata
+      expect(test_metadata).to be(nil)
+    end
+
     it "looks up indexed field names" do
       stub_request(:any, /panda\.example\.com/).to_return(
         :body => JSON.generate({

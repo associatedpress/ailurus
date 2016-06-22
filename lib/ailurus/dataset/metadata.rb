@@ -1,3 +1,5 @@
+require "json"
+
 module Ailurus
   class Dataset
     # Public: Retrieve metadata about this Dataset.
@@ -7,7 +9,11 @@ module Ailurus
     # Returns a Hash.
     def metadata
       endpoint = "/api/1.0/dataset/#{@slug}/"
-      @client.make_request(endpoint)
+      begin
+        @client.make_request(endpoint)
+      rescue JSON::JSONError
+        nil
+      end
     end
 
     # Public: Get the indexed name for a field so you can perform more detailed
