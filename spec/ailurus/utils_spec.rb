@@ -19,6 +19,21 @@ describe Ailurus::Utils do
       expect(test_uri.port).to eq(8080)
     end
 
+    it "handles bare IPv4 addresses" do
+      test_uri = Ailurus::Utils::get_absolute_uri("127.0.0.1")
+
+      expect(test_uri.scheme).to eq("http")
+      expect(test_uri.host).to eq("127.0.0.1")
+    end
+
+    it "handles bare IPv4 addresses with ports" do
+      test_uri = Ailurus::Utils::get_absolute_uri("127.0.0.1:8080")
+
+      expect(test_uri.scheme).to eq("http")
+      expect(test_uri.host).to eq("127.0.0.1")
+      expect(test_uri.port).to eq(8080)
+    end
+
     it "handles domains with HTTP" do
       test_uri = Ailurus::Utils::get_absolute_uri("http://panda.example.com")
 
